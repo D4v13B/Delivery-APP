@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize"
-import { sequilize } from "../config/db.js"
+import { sequelize } from "../config/db.js"
 
-const Order = sequilize.define("order",
+const Order = sequelize.define("order",
    {
       id: {
          type: DataTypes.INTEGER,
@@ -9,7 +9,7 @@ const Order = sequilize.define("order",
          autoIncrement: true
       },
       sequence: {
-         tyoe: DataTypes.INTEGER
+         type: DataTypes.INTEGER
       },
       value: {
          type: DataTypes.DECIMAL

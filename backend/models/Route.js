@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize"
-import { sequilize } from "../config/db.js"
+import { sequelize } from "../config/db.js"
 
-const Route = sequilize.define("route",
+const Route = sequelize.define("route",
    {
       id: {
          type: DataTypes.INTEGER,

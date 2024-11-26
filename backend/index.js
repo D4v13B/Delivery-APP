@@ -1,8 +1,11 @@
 import express from "express"
 import dotenv  from "dotenv"
+import {con} from "./config/db.js"
+import {Driver} from "./models/index.js"
 
 const app = express()
 app.use(express.json())
+con() // Conectar a la base de datos
 
 const port = process.env.PORT || 4000
 

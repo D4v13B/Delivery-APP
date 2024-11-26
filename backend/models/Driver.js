@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize"
-import { sequilize } from "../config/db.js"
+import { sequelize } from "../config/db.js"
 
-const Driver = sequilize.define("driver", 
+const Driver = sequelize.define("driver",
    {
       id: {
          type: DataTypes.INTEGER,
@@ -13,9 +13,10 @@ const Driver = sequilize.define("driver",
       }
    },
    {
-      tableName: "drivers",
-      timestamps: true
+      tableName: 'drivers',
+      timestamps: false,
    }
+
 )
 
 export default Driver
