@@ -9,7 +9,7 @@ const con = async () => {
    try {
       
       await sequelize.authenticate()
-      await sequelize.sync({alter: true})
+      // await sequelize.sync({alter: true})
 
       console.log("Conexion a base de datos establecida");
 

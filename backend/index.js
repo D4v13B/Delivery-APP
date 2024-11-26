@@ -5,6 +5,7 @@ import {Driver} from "./models/index.js"
 
 const app = express()
 app.use(express.json())
+dotenv.config()
 con() // Conectar a la base de datos
 
 const port = process.env.PORT || 4000
