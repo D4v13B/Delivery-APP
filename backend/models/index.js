@@ -9,7 +9,7 @@ Route.belongsTo(Driver, { foreignKey: "driverId", as: "driver" })
 
 //Relacionar Ruta con ordenes
 Route.hasMany(Order, { foreignKey: "routeId", as: "orders" })
-Order.belongsTo(Route, { foreignKey: "routeId", as: "route" })
+Order.belongsTo(Route, { foreignKey: "routeId", as: "routes" })
 
 export  {
    sequelize,
