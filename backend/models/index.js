@@ -5,7 +5,7 @@ import Order from "./Order.js";
 
 //Relacionar Driver con Ruta de 1 muchos
 Driver.hasMany(Route, { foreignKey: "driverId", as: "routes" })
-Route.belongsTo(Driver, { foreignKey: "driverId", as: "driver" })
+Route.belongsTo(Driver, { foreignKey: "driverId", as: "drivers" })
 
 //Relacionar Ruta con ordenes
 Route.hasMany(Order, { foreignKey: "routeId", as: "orders" })

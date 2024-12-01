@@ -23,7 +23,8 @@ const getRoutes = async (req, res) => {
             as: "drivers",
             required: true
          }
-      ]
+      ],
+      group: ["Route.id"]
    })
    res.json(routes)
 }

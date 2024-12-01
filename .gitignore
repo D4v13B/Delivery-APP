@@ -41,7 +41,7 @@ Thumbs.db
 
 # Backend Express
 /backend/node_modules
-/backend/dist
+/backend/distou
 
 # Base de datos local
 *.sqlite
@@ -54,3 +54,28 @@ Thumbs.db
 # Archivos Adicionales
 drivers.csv 
 instrucciones.pdf
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
