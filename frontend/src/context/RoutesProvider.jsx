@@ -5,7 +5,7 @@ const RoutesContext = createContext()
 
 export const RoutesProvider = ({ children }) => {
   const [routes, setRoutes] = useState([])
-  // const [route, setRoute] = useState({})
+  const [route, setRoute] = useState({})
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -21,10 +21,14 @@ export const RoutesProvider = ({ children }) => {
     fetchRoutes()
   }, [])
 
+  
+
   return (
     <RoutesContext.Provider
       value={{
-        routes
+        routes,
+        setRoute,
+        route
       }}
     >
       {children}

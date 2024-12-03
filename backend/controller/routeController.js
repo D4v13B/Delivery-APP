@@ -35,29 +35,44 @@ const getRoute = async (req, res) => {
 
       //Buscamos en la base de datos
       let route = await Route.findByPk(id, {
-         attributes: {
-            include: [
-               [
-                  sequelize.fn("SUM", sequelize.col("orders.value")), "total"
-               ]
+         attributes: [
+            'id',
+            'driverId',
+            'date',
+            'notes',
+            'createdAt',
+            'updatedAt',
+            [
+               sequelize.fn('SUM', sequelize.col('orders.value')), 'total'
             ]
-         },
+         ],
          include: [
             {
                model: Order,
-               as: "orders",
+               as: 'orders',
                required: true
             },
             {
                model: Driver,
-               as: "drivers",
+               as: 'drivers',
                required: true
             }
+         ],
+         group: ['Route.id', 'orders.id', 'drivers.id'],
+         order: [
+            ['orders', 'sequence', 'ASC']
          ]
-      })
-
-      if (route.id) {
-         res.json(route)
+      });
+      
+      if (route) {
+         const routeData = route.toJSON();
+      
+         // Eliminar la referencia circular de manera recursiva
+         routeData.orders.forEach(order => {
+            delete order.route 
+         });
+      
+         res.json({...routeData, inSystem: true})
          return
       }
 
@@ -71,7 +86,7 @@ const getRoute = async (req, res) => {
 
       res.status(404).json({ msg: "Ruta no encontrada" })
    } catch (error) {
-      res.status(400).json({ msg: "Ha ocurrido un error al momento de consultar la Ruta", error })
+      res.status(400).json({ msg: "Ha ocurrido un error al momento de consultar la Ruta"+ error.message })
    }
 }
 
@@ -95,7 +110,7 @@ const saveRoute = async (req, res) => {
 
          await Route.update(updatedRoute, {
             where: { id: findRoute.id },
-            transact, 
+            transact,
          })
 
          for (let order of ordersInfo) {
