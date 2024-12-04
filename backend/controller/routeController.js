@@ -16,15 +16,16 @@ const getRoutes = async (req, res) => {
          {
             model: Order,
             as: "orders",
-            required: true
          },
          {
             model: Driver,
             as: "drivers",
-            required: true
          }
       ],
-      group: ["Route.id"]
+      group: ['Route.id', 'orders.id'],
+      order: [
+         ['orders', 'sequence', 'ASC']
+      ]
    })
    res.json(routes)
 }
@@ -63,16 +64,16 @@ const getRoute = async (req, res) => {
             ['orders', 'sequence', 'ASC']
          ]
       });
-      
+
       if (route) {
          const routeData = route.toJSON();
-      
+
          // Eliminar la referencia circular de manera recursiva
          routeData.orders.forEach(order => {
-            delete order.route 
+            delete order.route
          });
-      
-         res.json({...routeData, inSystem: true})
+
+         res.json({ ...routeData, inSystem: true })
          return
       }
 
@@ -86,7 +87,7 @@ const getRoute = async (req, res) => {
 
       res.status(404).json({ msg: "Ruta no encontrada" })
    } catch (error) {
-      res.status(400).json({ msg: "Ha ocurrido un error al momento de consultar la Ruta"+ error.message })
+      res.status(400).json({ msg: "Ha ocurrido un error al momento de consultar la Ruta" + error.message })
    }
 }
 

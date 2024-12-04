@@ -1,12 +1,30 @@
 import { useState, useEffect } from "react"
-import { useRoutes } from "../hooks/useRoutes"
 import { clienteAxios } from "../config/ClienteAxios"
+import { useRoutes } from "../hooks/useRoutes"
 
-const FormRoute = () => {
-  const { route, routes, setRoute } = useRoutes()
-
+const FormRoute = ({ routeId }) => {
+  const { route, setRoute } = useRoutes()
+  const [total, setTotal] = useState(0)
   const [drivers, setDrivers] = useState([])
+  const [alerta, setAlerta] = useState("")
 
+  // Cargar datos de la ruta al iniciar
+  useEffect(() => {
+    const fetchRoute = async () => {
+      try {
+        const { data } = await clienteAxios.get(`/routes/${routeId}`)
+        setRoute(data) // Asignar la información de la ruta al estado
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    if (routeId) {
+      fetchRoute()
+    }
+  }, [routeId, setRoute])
+
+  // Cargar datos de conductores al iniciar
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
@@ -19,9 +37,18 @@ const FormRoute = () => {
     fetchDrivers()
   }, [])
 
+  // Calcular el total
   useEffect(() => {
-    
-  }, [routes, setRoute])
+    if (route.orders && route.orders.length > 0) {
+      const totalOrders = route.orders.reduce(
+        (acc, e) => acc + parseFloat(e.value || 0),
+        0
+      )
+      setTotal(totalOrders)
+    } else {
+      setTotal(0)
+    }
+  }, [route.orders])
 
   const handleCheckboxChange = (event, id) => {
     const updatedOrders = route.orders.map((order) =>
@@ -30,35 +57,63 @@ const FormRoute = () => {
     setRoute({ ...route, orders: updatedOrders })
   }
 
-  console.log(route)
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const rutaInfo = {
+        driverId: route.driverId,
+        date: route.date,
+        notes: route.notes,
+      }
+
+      const ordersInfo = route.orders
+
+      const res = await clienteAxios.post(`/routes/${route.id}`, {
+        rutaInfo,
+        ordersInfo,
+      })
+
+      setAlerta({ msg: res.data.msg })
+      setRoute({})
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
 
   return (
     <>
-      {/* Buscar y seleccionar campos */}
+      {/* Mostrar alerta */}
+      {alerta && (
+        <div
+          className={`p-3 mb-3 rounded-lg text-center ${
+            !alerta.error ? "bg-green-500 text-white" : "bg-red-500 text-white"
+          }`}
+        >
+          {alerta.msg || "Error en la operación"}
+        </div>
+      )}
+
+      {/* Formulario */}
       <div className="grid grid-cols-1 gap-4 mb-6">
-        {/* ID de la ruta */}
         <input
           type="text"
           placeholder="78901"
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          value={route.id}
+          value={route.id || ""}
+          readOnly
         />
-        {/* Nombre del conductor */}
         <select
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           value={route?.driverId || ""}
-          onChange={(e) =>
-            setRoute({ ...route, driverId: e.target.value })
-          }
+          onChange={(e) => setRoute({ ...route, driverId: e.target.value })}
         >
           {drivers.map((e) => (
             <option value={e.id} key={e.id}>
               {e.name}
             </option>
           ))}
-          {/* Aquí agregarías más conductores dinámicamente */}
         </select>
-        {/* Fecha */}
         <input
           type="date"
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -67,7 +122,6 @@ const FormRoute = () => {
           }
           onChange={(e) => setRoute({ ...route, date: e.target.value })}
         />
-        {/* Notas */}
         <textarea
           placeholder="Notas"
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -126,13 +180,23 @@ const FormRoute = () => {
         </table>
       </div>
 
-      {/* Valor total */}
+      {/* Total */}
       <div className="mt-4 flex justify-between items-center">
         <span className="text-xl font-semibold text-gray-700">Valor total</span>
-        <span className="text-xl font-semibold text-gray-900">${route.total ?? 0}</span>
+        <span className="text-xl font-semibold text-gray-900">
+          ${total.toFixed(2)}
+        </span>
       </div>
 
-      
+      {/* Botón */}
+      <div className="mt-6">
+        <button
+          className="w-full bg-indigo-600 text-white p-3 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          onClick={handleSubmit}
+        >
+          Guardar
+        </button>
+      </div>
     </>
   )
 }

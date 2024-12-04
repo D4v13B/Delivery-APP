@@ -1,8 +1,22 @@
+import { useEffect } from "react"
 import { useRoutes } from "../hooks/useRoutes"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export const RoutesPage = () => {
-  const { routes } = useRoutes()
+  const { routes, setRoute } = useRoutes()
+  const navigate = useNavigate()
+
+  const handleEditRoute = (event, route, targetLink) => {
+    event.preventDefault()
+    setRoute(route)
+
+    navigate(targetLink)
+    console.log(route)
+  }
+
+  useEffect(() => {
+    setRoute({})
+  }, [])
 
   return (
     <>
@@ -37,14 +51,20 @@ export const RoutesPage = () => {
                     {new Date(e.date).toLocaleDateString("es-PA")}
                   </td>
                   <td className="py-3 px-6 text-sm font-medium text-blue-600 hover:text-blue-800 border-b">
-                    <Link to={`/router-detail/${e.id}`}>Ver</Link>
+                    <Link 
+                    to={`/router-detail/${e.id}`}
+                    onClick={event => handleEditRoute(event, e, `/router-detail/${e.id}`)}>
+                      Ver
+                    </Link>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <Link to={"/add-route"} className="bg-indigo-600 px-5 py-2 text-white text-sm font-medium uppercase rounded-lg  hover:bg-indigo-700">
+        <Link 
+        to={"/add-route"} 
+        className="bg-indigo-600 px-5 py-2 text-white text-sm font-medium uppercase rounded-lg  hover:bg-indigo-700">
               + Añadir Ruta
         </Link>
       </div>
