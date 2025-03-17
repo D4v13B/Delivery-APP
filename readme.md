@@ -1,9 +1,3 @@
-
-
-
-
-
-
 # Proyecto de Gestión de Rutas
 
 Este proyecto es una aplicación web para la gestión de rutas, donde se utilizan varias tecnologías como **Express**, **React**, **Sequelize** y **TailwindCSS**. A continuación, se detallan los pasos para la configuración, inicialización y descripción de las tecnologías utilizadas en el proyecto.

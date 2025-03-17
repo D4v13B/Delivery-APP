@@ -21,8 +21,6 @@ export const RoutesProvider = ({ children }) => {
     fetchRoutes()
   }, [])
 
-  
-
   return (
     <RoutesContext.Provider
       value={{
